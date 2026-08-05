@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DashTales — the road-trip companion that works in the middle of nowhere</title>
+<meta name="description" content="A voice companion for family road trips. Stories, songs, and real conversation about the things you love — and it works with zero bars, because everything lives on your phone.">
+<style>
+  :root{
+    --bg:#191721; --bg2:#221f2e; --card:#2a2638; --ink:#f2eee6; --ink-dim:#b9b2a6;
+    --accent:#f5a623; --accent-deep:#d4881c; --road:#4f4a63; --ok:#7ec8a5;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.6}
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px}
+  a{color:var(--accent)}
+
+  /* hero */
+  header{padding:64px 0 40px;background:
+    radial-gradient(ellipse 90% 60% at 50% -10%, #33304a 0%, var(--bg) 70%)}
+  .brand{font-weight:800;font-size:1.05rem;letter-spacing:.04em;color:var(--accent)}
+  h1{font-size:clamp(1.9rem,5vw,3rem);line-height:1.15;font-weight:800;margin:22px 0 14px;max-width:21ch}
+  .sub{font-size:clamp(1.02rem,2.4vw,1.25rem);color:var(--ink-dim);max-width:52ch;margin-bottom:26px}
+  .nobars{display:inline-flex;align-items:center;gap:10px;background:var(--card);
+    border:1px solid var(--road);border-radius:999px;padding:8px 18px;font-weight:700;
+    font-size:.95rem;margin-bottom:26px}
+  .nobars .dot{width:9px;height:9px;border-radius:50%;background:var(--ok)}
+  .cta{display:inline-block;background:var(--accent);color:#1c1408;font-weight:800;
+    padding:14px 28px;border-radius:12px;text-decoration:none;font-size:1.05rem;border:0;cursor:pointer}
+  .cta:hover{background:var(--accent-deep)}
+  .hero-note{font-size:.85rem;color:var(--ink-dim);margin-top:12px}
+
+  /* sections */
+  section{padding:52px 0;border-top:1px solid #2e2a3d}
+  h2{font-size:clamp(1.4rem,3.4vw,1.9rem);font-weight:800;margin-bottom:10px}
+  .lead{color:var(--ink-dim);max-width:60ch;margin-bottom:28px}
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+  .card{background:var(--card);border:1px solid var(--road);border-radius:16px;padding:22px}
+  .card h3{font-size:1.05rem;margin-bottom:8px}
+  .card p{font-size:.95rem;color:var(--ink-dim)}
+  .step-n{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;
+    background:var(--accent);color:#1c1408;font-weight:800;margin-bottom:12px}
+
+  /* packs */
+  .pack{display:flex;flex-direction:column;gap:10px}
+  .pack .art{height:110px;border-radius:12px;display:grid;place-items:center;
+    font-size:2.2rem;background:linear-gradient(135deg,#3a3450,#2a2638)}
+  .pack .price-row{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+  .price{font-weight:800;font-size:1.15rem}
+  .own{font-size:.78rem;color:var(--ok);font-weight:700;letter-spacing:.03em}
+  .buy{background:var(--accent);color:#1c1408;font-weight:800;border:0;border-radius:10px;
+    padding:10px 16px;cursor:pointer;font-size:.95rem}
+  .buy:hover{background:var(--accent-deep)}
+
+  /* honest box + kids */
+  .honest{background:var(--bg2);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;
+    padding:18px 20px;font-size:.97rem;color:var(--ink-dim);max-width:66ch}
+  .honest strong{color:var(--ink)}
+
+  /* modal / form */
+  dialog{border:0;border-radius:18px;background:var(--card);color:var(--ink);
+    max-width:430px;width:92vw;padding:28px}
+  dialog::backdrop{background:rgba(10,8,16,.75)}
+  dialog h3{margin-bottom:6px}
+  dialog p{font-size:.95rem;color:var(--ink-dim);margin-bottom:16px}
+  input[type=email]{width:100%;padding:13px 14px;border-radius:10px;border:1px solid var(--road);
+    background:var(--bg);color:var(--ink);font-size:1rem;margin-bottom:12px}
+  .row{display:flex;gap:10px;align-items:center}
+  .ghost{background:none;border:0;color:var(--ink-dim);cursor:pointer;font-size:.9rem;padding:10px}
+  .thanks{color:var(--ok);font-weight:700;display:none}
+
+  footer{padding:44px 0 60px;border-top:1px solid #2e2a3d;font-size:.85rem;color:var(--ink-dim)}
+  footer p{max-width:70ch;margin-bottom:10px}
+  @media (max-width:520px){ header{padding-top:44px} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">DashTales</div>
+    <div style="margin-top:26px" class="nobars"><span class="dot"></span>Works with zero bars</div>
+    <h1>The road-trip companion that works in the middle of nowhere.</h1>
+    <p class="sub">A voice companion for the whole car. Stories and songs for the kids,
+    real conversation about history, art, and film for you — hands-free, and it keeps
+    working when your signal doesn't, because everything lives on your phone.</p>
+    <button class="cta" data-pack="waitlist" onclick="openDoor(this)">Get early access</button>
+    <div class="hero-note">iPhone app, in development. No subscription required — ever.</div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>How it works</h2>
+    <div class="grid3">
+      <div class="card"><span class="step-n">1</span>
+        <h3>Pick your packs at home</h3>
+        <p>Download story, song, and knowledge packs over Wi-Fi before you leave.
+        Each pack is a curated little library your companion knows inside-out.</p></div>
+      <div class="card"><span class="step-n">2</span>
+        <h3>Talk, hands-free</h3>
+        <p>Ask for a story about a dragon who's afraid of heights. Ask why Caravaggio
+        had to flee Rome. Ask follow-ups. It converses — it doesn't just play audio.</p></div>
+      <div class="card"><span class="step-n">3</span>
+        <h3>No signal? No difference.</h3>
+        <p>The brain and the packs live on your phone. National parks, mountain passes,
+        the long empty stretch — your packs stay sharp the whole way.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="packs">
+  <div class="wrap">
+    <h2>Packs you buy once and keep forever</h2>
+    <p class="lead">No subscription. No expiring library. A pack is yours like a book is yours.</p>
+    <div class="grid3">
+      <div class="card pack">
+        <div class="art">🐉</div>
+        <h3>Children's Stories</h3>
+        <p>Classic fairy tales retold for the back seat, plus made-to-order stories on
+        request — your kid names the hero. Kids Mode is parental-gated and runs
+        entirely offline.</p>
+        <div class="price-row"><div><span class="price">$7.99</span><br><span class="own">YOURS FOREVER</span></div>
+        <button class="buy" data-pack="children-stories" onclick="openDoor(this)">Pre-order</button></div>
+      </div>
+      <div class="card pack">
+        <div class="art">🎖️</div>
+        <h3>WW2 History</h3>
+        <p>A deep, grounded pack built from official archival histories. Campaigns,
+        turning points, the stories behind the dates — and it can answer your follow-up
+        questions, offline.</p>
+        <div class="price-row"><div><span class="price">$12.99</span><br><span class="own">YOURS FOREVER</span></div>
+        <button class="buy" data-pack="ww2-history" onclick="openDoor(this)">Pre-order</button></div>
+      </div>
+      <div class="card pack">
+        <div class="art">🎨</div>
+        <h3>Baroque Art</h3>
+        <p>Caravaggio to Rembrandt, drama included. The lives, the scandals, the
+        light — a museum-grade companion for the long highway miles.</p>
+        <div class="price-row"><div><span class="price">$9.99</span><br><span class="own">YOURS FOREVER</span></div>
+        <button class="buy" data-pack="baroque-art" onclick="openDoor(this)">Pre-order</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Honest, out loud</h2>
+    <div class="honest">
+      <p><strong>Offline, DashTales switches to the brain that lives on your phone.</strong>
+      Your packs stay sharp — stories, songs, and pack knowledge are always with you.
+      What changes: no live traffic, weather, news, or scores, and general questions get
+      simpler answers. When it isn't sure, it says so.</p>
+      <p style="margin-top:12px"><strong>Kids Mode never uses the cloud.</strong> Voices in
+      Kids Mode never leave the phone. Purchases and exit sit behind a parental gate.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong style="color:var(--ink)">DashTales</strong> is in development. Nothing on this
+    page is for sale yet; “pre-order” collects an email address and nothing else, and early
+    supporters get their chosen pack free at launch.</p>
+    <p>DashTales is hands-free entertainment for passengers and stopped vehicles. It is not a
+    driver-assistance, alertness, or safety product. Always follow local law and give the road
+    your full attention.</p>
+    <p>We'll email you about launch and nothing else. No analytics accounts, no tracking
+    pixels on this page.</p>
+    <p>Contact: <a id="contact-mail" href="#">email us</a></p>
+  </div>
+</footer>
+
+<dialog id="door">
+  <h3 id="door-title">Not on sale yet — but almost.</h3>
+  <p id="door-copy">Packs aren't available yet. Leave your email and
+  <strong id="door-pack-name">this pack</strong> is free for you at launch.</p>
+  <form id="door-form">
+    <input type="email" id="door-email" name="email" placeholder="you@example.com" required autocomplete="email">
+    <input type="hidden" id="door-pack" name="pack" value="">
+    <div class="row">
+      <button class="cta" type="submit">Count me in</button>
+      <button class="ghost" type="button" onclick="closeDoor()">No thanks</button>
+      <span class="thanks" id="door-thanks">You're in. ✓</span>
+    </div>
+  </form>
+</dialog>
+
+<script>
+/* ============================================================
+   CONFIG — set these two lines, everything else just works.
+   1) FORM_ENDPOINT: create a free form at formspree.io (10 min),
+      paste its endpoint URL here, e.g. "https://formspree.io/f/abcdwxyz".
+      Until set, the form falls back to a pre-filled email draft.
+   2) CONTACT_EMAIL: shown in the footer + used by the fallback.
+   ============================================================ */
+const FORM_ENDPOINT = "";
+const CONTACT_EMAIL = "gerard@halfmarble.com";
+
+const PACK_NAMES = {
+  "children-stories": "the Children's Stories pack",
+  "ww2-history": "the WW2 History pack",
+  "baroque-art": "the Baroque Art pack",
+  "waitlist": "your first pack"
+};
+
+document.getElementById("contact-mail").href = "mailto:" + CONTACT_EMAIL;
+
+const door = document.getElementById("door");
+let currentPack = "waitlist";
+
+function openDoor(btn){
+  currentPack = btn.dataset.pack || "waitlist";
+  document.getElementById("door-pack").value = currentPack;
+  document.getElementById("door-pack-name").textContent = PACK_NAMES[currentPack] || "your first pack";
+  document.getElementById("door-title").textContent =
+    currentPack === "waitlist" ? "Be first in line." : "Not on sale yet — but almost.";
+  document.getElementById("door-thanks").style.display = "none";
+  // lightweight local click log (visible in console; also sent with the form)
+  const clicks = JSON.parse(localStorage.getItem("dt_clicks") || "{}");
+  clicks[currentPack] = (clicks[currentPack] || 0) + 1;
+  localStorage.setItem("dt_clicks", JSON.stringify(clicks));
+  door.showModal();
+}
+function closeDoor(){ door.close(); }
+
+document.getElementById("door-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("door-email").value;
+  if (!FORM_ENDPOINT) {
+    // Fallback until Formspree is configured: open a pre-filled email draft.
+    location.href = "mailto:" + CONTACT_EMAIL
+      + "?subject=" + encodeURIComponent("DashTales early access: " + currentPack)
+      + "&body=" + encodeURIComponent("Sign me up: " + email);
+    return;
+  }
+  try {
+    await fetch(FORM_ENDPOINT, {
+      method: "POST",
+      headers: { "Accept": "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify({ email, pack: currentPack,
+        clicks: localStorage.getItem("dt_clicks") || "{}" })
+    });
+    document.getElementById("door-thanks").style.display = "inline";
+    setTimeout(closeDoor, 1400);
+  } catch {
+    alert("Something hiccuped — mind emailing " + CONTACT_EMAIL + " instead?");
+  }
+});
+</script>
+</body>
+</html>
