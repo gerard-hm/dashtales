@@ -86,7 +86,7 @@
     <p class="sub">A voice companion for the whole car. Stories and songs for the kids,
     real conversation about history, art, and film for you — hands-free, and it keeps
     working when your signal doesn't, because everything lives on your phone.</p>
-    <button class="cta" data-pack="waitlist" onclick="openDoor(this)">Get early access</button>
+    <button class="cta" data-pack="waitlist" onclick="openDoor(this)">Coming soon</button>
     <div class="hero-note">iPhone app, in development. No subscription required — ever.</div>
   </div>
 </header>
@@ -123,7 +123,7 @@
         request — your kid names the hero. Kids Mode is parental-gated and runs
         entirely offline.</p>
         <div class="price-row"><div><span class="price">$7.99</span><br><span class="own">YOURS FOREVER</span></div>
-        <button class="buy" data-pack="children-stories" onclick="openDoor(this)">Pre-order</button></div>
+        <button class="buy" data-pack="children-stories" onclick="openDoor(this)">Coming soon</button></div>
       </div>
       <div class="card pack">
         <div class="art">🎖️</div>
@@ -132,7 +132,7 @@
         turning points, the stories behind the dates — and it can answer your follow-up
         questions, offline.</p>
         <div class="price-row"><div><span class="price">$12.99</span><br><span class="own">YOURS FOREVER</span></div>
-        <button class="buy" data-pack="ww2-history" onclick="openDoor(this)">Pre-order</button></div>
+        <button class="buy" data-pack="ww2-history" onclick="openDoor(this)">Coming soon</button></div>
       </div>
       <div class="card pack">
         <div class="art">🎨</div>
@@ -140,7 +140,7 @@
         <p>Caravaggio to Rembrandt, drama included. The lives, the scandals, the
         light — a museum-grade companion for the long highway miles.</p>
         <div class="price-row"><div><span class="price">$9.99</span><br><span class="own">YOURS FOREVER</span></div>
-        <button class="buy" data-pack="baroque-art" onclick="openDoor(this)">Pre-order</button></div>
+        <button class="buy" data-pack="baroque-art" onclick="openDoor(this)">Coming soon</button></div>
       </div>
     </div>
   </div>
@@ -163,8 +163,8 @@
 <footer>
   <div class="wrap">
     <p><strong style="color:var(--ink)">DashTales</strong> is in development. Nothing on this
-    page is for sale yet; “pre-order” collects an email address and nothing else, and early
-    supporters get their chosen pack free at launch.</p>
+    page is for sale yet, and this page collects nothing — no forms, no analytics, no
+    tracking.</p>
     <p>DashTales is hands-free entertainment for passengers and stopped vehicles. It is not a
     driver-assistance, alertness, or safety product. Always follow local law and give the road
     your full attention.</p>
@@ -175,81 +175,21 @@
 </footer>
 
 <dialog id="door">
-  <h3 id="door-title">Not on sale yet — but almost.</h3>
-  <p id="door-copy">Packs aren't available yet. Leave your email and
-  <strong id="door-pack-name">this pack</strong> is free for you at launch.</p>
-  <form id="door-form">
-    <input type="email" id="door-email" name="email" placeholder="you@example.com" required autocomplete="email">
-    <input type="hidden" id="door-pack" name="pack" value="">
-    <div class="row">
-      <button class="cta" type="submit">Count me in</button>
-      <button class="ghost" type="button" onclick="closeDoor()">No thanks</button>
-      <span class="thanks" id="door-thanks">You're in. ✓</span>
-    </div>
-  </form>
+  <h3>Not on sale yet.</h3>
+  <p>DashTales is in development — packs aren't available to buy or pre-order
+  yet. Check back, or email us if you'd like to hear when it launches.</p>
+  <div class="row">
+    <button class="ghost" type="button" onclick="closeDoor()">Close</button>
+  </div>
 </dialog>
 
 <script>
-/* ============================================================
-   CONFIG — set these two lines, everything else just works.
-   1) FORM_ENDPOINT: create a free form at formspree.io (10 min),
-      paste its endpoint URL here, e.g. "https://formspree.io/f/abcdwxyz".
-      Until set, the form falls back to a pre-filled email draft.
-   2) CONTACT_EMAIL: shown in the footer + used by the fallback.
-   ============================================================ */
-const FORM_ENDPOINT = "";
 const CONTACT_EMAIL = "gerard@halfmarble.com";
-
-const PACK_NAMES = {
-  "children-stories": "the Children's Stories pack",
-  "ww2-history": "the WW2 History pack",
-  "baroque-art": "the Baroque Art pack",
-  "waitlist": "your first pack"
-};
-
 document.getElementById("contact-mail").href = "mailto:" + CONTACT_EMAIL;
 
 const door = document.getElementById("door");
-let currentPack = "waitlist";
-
-function openDoor(btn){
-  currentPack = btn.dataset.pack || "waitlist";
-  document.getElementById("door-pack").value = currentPack;
-  document.getElementById("door-pack-name").textContent = PACK_NAMES[currentPack] || "your first pack";
-  document.getElementById("door-title").textContent =
-    currentPack === "waitlist" ? "Be first in line." : "Not on sale yet — but almost.";
-  document.getElementById("door-thanks").style.display = "none";
-  // lightweight local click log (visible in console; also sent with the form)
-  const clicks = JSON.parse(localStorage.getItem("dt_clicks") || "{}");
-  clicks[currentPack] = (clicks[currentPack] || 0) + 1;
-  localStorage.setItem("dt_clicks", JSON.stringify(clicks));
-  door.showModal();
-}
+function openDoor(btn){ door.showModal(); }
 function closeDoor(){ door.close(); }
-
-document.getElementById("door-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const email = document.getElementById("door-email").value;
-  if (!FORM_ENDPOINT) {
-    // Fallback until Formspree is configured: open a pre-filled email draft.
-    location.href = "mailto:" + CONTACT_EMAIL
-      + "?subject=" + encodeURIComponent("DashTales early access: " + currentPack)
-      + "&body=" + encodeURIComponent("Sign me up: " + email);
-    return;
-  }
-  try {
-    await fetch(FORM_ENDPOINT, {
-      method: "POST",
-      headers: { "Accept": "application/json", "Content-Type": "application/json" },
-      body: JSON.stringify({ email, pack: currentPack,
-        clicks: localStorage.getItem("dt_clicks") || "{}" })
-    });
-    document.getElementById("door-thanks").style.display = "inline";
-    setTimeout(closeDoor, 1400);
-  } catch {
-    alert("Something hiccuped — mind emailing " + CONTACT_EMAIL + " instead?");
-  }
-});
 </script>
 </body>
 </html>
