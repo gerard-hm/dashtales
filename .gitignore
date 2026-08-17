@@ -1,0 +1,15 @@
+# Static site (GitHub Pages, no build step) — there is nothing generated to ignore yet.
+# This file exists so that stays true: if a bundler, a Jekyll build, or an asset
+# pipeline ever lands here, its output goes below BEFORE the first build, never after.
+# See "Build output never enters a repo" in ~/Projects/CLAUDE.md.
+
+# OS / editor junk
+.DS_Store
+._*
+.vscode/
+.idea/
+*.swp
+
+# Local env / secrets
+.env
+.env.local
